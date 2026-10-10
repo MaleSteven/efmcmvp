@@ -20,10 +20,9 @@ input,select,textarea{width:100%;box-sizing:border-box;min-height:44px;border:1p
 .alt{background:var(--cd);color:var(--lk);border-color:var(--lk)}.sm{min-height:36px;font-size:12px;width:auto;flex:1}.ussd-btn{background:#000;color:#0f0;border-color:#000;font-family:monospace}.momo-btn{background:#FFCC00;color:#000;border-color:#E6B800}
 .card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
 .pc{flex-direction:row;align-items:center;gap:12px;color:inherit;text-decoration:none}
-.ph{width:76px;height:76px;border-radius:8px;background:var(--ph);color:var(--pt);display:flex;align-items:center;justify-content:center;font-size:11px;text-align:center;flex:none;overflow:hidden}
-.ph img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-.ph svg{width:100%;height:100%;display:block;border-radius:8px}
-.big{width:100%;height:200px;font-size:14px;overflow:hidden}
+.ph{width:76px;height:76px;border-radius:8px;background:var(--ph);color:var(--pt);display:flex;align-items:center;justify-content:center;font-size:11px;text-align:center;flex:none;overflow:hidden;position:relative}
+.ph img{width:100%;height:100%;object-fit:cover;border-radius:8px;display:block}
+.big{width:100%;height:220px;font-size:14px;overflow:hidden}
 .row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:110px}.col{flex:1;min-width:0}
 .t{font-weight:700}.m{font-size:13px;color:var(--mu)}.pill{display:inline-block;font-size:11px;font-weight:700;border:1px solid var(--mu);border-radius:20px;padding:2px 8px;color:var(--tx)}
 .pill.grd{border-color:var(--ac);color:var(--ac)}.pill.fresh{border-color:#107C41;color:#107C41;background:#E8F5E9}
@@ -34,9 +33,6 @@ nav a.on{color:var(--lk);font-weight:700}nav em{background:var(--ac);color:#fff;
 #smsBanner{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#1A252C;color:#E6F1F2;border:1px solid #3A505D;padding:12px 16px;border-radius:10px;font-size:13px;display:none;max-width:90%;z-index:101;box-shadow:0 8px 20px rgba(0,0,0,0.4)}
 a.lk{color:var(--lk);font-weight:700}.empty{text-align:center;color:var(--mu);padding:20px 0}
 summary{min-height:40px;display:flex;align-items:center;font-weight:700;color:var(--lk);cursor:pointer}
-.msgs{max-height:200px;overflow:auto;display:flex;flex-direction:column;gap:6px;margin:4px 0 8px}
-.msg{background:var(--ph);border-radius:8px;padding:6px 10px;align-self:flex-start;max-width:85%;word-break:break-word}
-.msg.me{align-self:flex-end;background:var(--pr);color:#fff}.msg.me .m{color:#E1F0F2}
 .prow{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}.prow:last-child{border:0}.prow .m{text-align:right}
 .modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
 .ussd-screen{background:#111;color:#0f0;font-family:monospace;padding:20px;border-radius:12px;width:100%;max-width:340px}
@@ -97,12 +93,12 @@ var GRADES = ['Grade A (>1.5kg)','Grade B (0.8-1.4kg)','Grade C (<0.8kg)','Proce
 var ROLES = ['Fisherman','Fish farmer','Fish vendor','Restaurant/Hotel Buyer','Consumer','Entebbe Boda Carrier'];
 var COND = ['Fresh today','Smoked','Dried'];
 
-var FS_IMG = { "Tilapia": "images.jpg", "Nile perch": "images (4).jpg", "Catfish": "images (3).jpg", "Mukene": "images (5).jpg" };
-var FS_SVG = {
-  "Tilapia": "<svg viewBox=\"0 0 160 100\"><rect width=\"160\" height=\"100\" fill=\"#CFE7EA\"/><ellipse cx=\"80\" cy=\"50\" rx=\"44\" ry=\"26\" fill=\"#B5C494\"/><circle cx=\"46\" cy=\"44\" r=\"4\" fill=\"#fff\"/><circle cx=\"45\" cy=\"44\" r=\"2\" fill=\"#10262B\"/></svg>",
-  "Nile perch": "<svg viewBox=\"0 0 160 100\"><rect width=\"160\" height=\"100\" fill=\"#CFE7EA\"/><path d=\"M18 52 Q30 30 76 30 Q116 30 130 50 Q116 70 76 70 Z\" fill=\"#C3CED3\"/><circle cx=\"30\" cy=\"46\" r=\"4\" fill=\"#fff\"/><circle cx=\"29\" cy=\"46\" r=\"2\" fill=\"#10262B\"/></svg>",
-  "Catfish": "<svg viewBox=\"0 0 160 100\"><rect width=\"160\" height=\"100\" fill=\"#CFE7EA\"/><path d=\"M34 50 Q60 34 100 42 L130 50 L100 58 Z\" fill=\"#5E5A52\"/><circle cx=\"36\" cy=\"49\" r=\"3\" fill=\"#fff\"/><circle cx=\"35\" cy=\"49\" r=\"1.5\" fill=\"#10262B\"/></svg>",
-  "Mukene": "<svg viewBox=\"0 0 160 100\"><rect width=\"160\" height=\"100\" fill=\"#CFE7EA\"/><g transform=\"translate(30 30) scale(1.5)\"><path d=\"M0 0 Q14 -9 28 0 Q14 9 0 0Z\" fill=\"#D4DDE2\"/><circle cx=\"5\" cy=\"-1\" r=\"1.5\" fill=\"#10262B\"/></g></svg>"
+// Filename Mapping directly matching VS Code Workspace
+var FS_IMG = {
+  "Tilapia": "images.jpg",
+  "Catfish": "images3.jpg",
+  "Nile perch": "images4.jpg",
+  "Mukene": "images5.jpg"
 };
 
 var currentLang = 'en';
@@ -187,7 +183,9 @@ function seedSampleData(){
       'local_user': {
         items: [
           { id: 'p1', type: 'Tilapia', grade: 'Grade A (>1.5kg)', cond: 'Fresh today', qty: 40, price: 13500, loc: 'Kasenyi Landing Site', note: 'Landed at 6 AM', status: 'active', ts: Date.now() - 7200000 },
-          { id: 'p2', type: 'Nile perch', grade: 'Grade B (0.8-1.4kg)', cond: 'Fresh today', qty: 85, price: 16000, loc: 'Kigungu Landing Site', note: 'Chilled in solar ice box', status: 'active', ts: Date.now() - 14400000 }
+          { id: 'p2', type: 'Nile perch', grade: 'Grade B (0.8-1.4kg)', cond: 'Fresh today', qty: 85, price: 16000, loc: 'Kigungu Landing Site', note: 'Chilled in solar ice box', status: 'active', ts: Date.now() - 14400000 },
+          { id: 'p3', type: 'Catfish', grade: 'Grade A (>1.5kg)', cond: 'Fresh today', qty: 30, price: 11000, loc: 'Nakiwogo Landing Site', note: 'Live catch from lake', status: 'active', ts: Date.now() - 3600000 },
+          { id: 'p4', type: 'Mukene', grade: 'Processing Grade', cond: 'Dried', qty: 150, price: 5500, loc: 'Kasenyi Landing Site', note: 'Sun dried on raised racks', status: 'active', ts: Date.now() - 18000000 }
         ]
       }
     },
@@ -243,9 +241,7 @@ function derive(){
 
 function fishImg(t){
   var imgSrc = FS_IMG[t] || "images.jpg";
-  var svgFallback = FS_SVG[t] || FS_SVG["Tilapia"];
-  return '<img src="' + imgSrc + '" alt="' + esc(t) + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';">' +
-         '<div style="display:none;width:100%;height:100%;">' + svgFallback + '</div>';
+  return '<img src="' + imgSrc + '" alt="' + esc(t) + '">';
 }
 
 function activeProducts(){
@@ -263,7 +259,7 @@ function card(p){
            '<div class="col">' +
              '<div class="t">' + esc(fishLabel) + ' · ' + esc(p.cond) + '</div>' +
              '<div>' + money(p.price) + '/kg · ' + p.qty + ' kg</div>' +
-             '<div><span class="pill fresh">⏱ ' + timeAgo(p.ts) + '</span> <span class="pill grd">' + esc(p.grade || 'Grade A') + '</span></div>' +
+             '<div><span class="pill fresh">' + timeAgo(p.ts) + '</span> <span class="pill grd">' + esc(p.grade || 'Grade A') + '</span></div>' +
              '<div class="m">' + esc(sellerOf(p).name) + ' · ' + esc(p.loc) + '</div>' +
            '</div>' +
          '</a>';
@@ -346,7 +342,7 @@ function render(){
       var open = p.status === 'active' && p.qty > 0;
       var map = LOC_MAPS[p.loc];
       var fishLabel = currentLang === 'lg' ? (FISH_NAMES_LG[p.type] || p.type) : p.type;
-      h = '<a class="lk" href="#/browse">← Back</a><div class="ph big">' + fishImg(p.type) + '</div><h1>' + esc(fishLabel) + ' (' + esc(p.cond) + ')</h1><div class="t">' + money(p.price) + '/kg · ' + p.qty + ' kg available</div><div><span class="pill fresh">⏱ ' + timeAgo(p.ts) + '</span> <span class="pill grd">' + esc(p.grade || 'Grade A') + '</span></div><div class="m">Seller: ' + esc(s.name) + ' • Site: ' + esc(p.loc) + '</div>' + (map ? '<a class="lk m" href="' + map.url + '" target="_blank" rel="noopener">📍 View Landing Site Map</a>' : '') + (p.note ? '<div>Note: ' + esc(p.note) + '</div>' : '') + (own ? '<div class="card">Your Listing</div><div class="row"><button class="btn alt sm" onclick="markSold(\'' + p.id + '\')">Mark Sold</button><button class="btn alt sm" onclick="delProduct(\'' + p.id + '\')">Delete</button></div>' : (!open ? '<div class="card">Sold out</div>' : (m ? '<h2>Order Fish</h2><form data-f="order" data-id="' + p.id + '" style="display:flex;flex-direction:column;gap:12px">' + fld('qty','Quantity (kg)','number','','required min="1" max="' + p.qty + '" step="any"') + '<div><label for="mode">Fulfillment</label><select id="mode" name="mode"><option>Landing Site Pickup</option><option>Entebbe Boda Express (+UGX 3,000)</option></select></div>' + fld('date','Date','date','','required') + '<button class="btn momo-btn">Pay MoMo Escrow</button></form>' : '<a class="btn" href="#/welcome">Log in to order</a>')));
+      h = '<a class="lk" href="#/browse">← Back</a><div class="ph big">' + fishImg(p.type) + '</div><h1>' + esc(fishLabel) + ' (' + esc(p.cond) + ')</h1><div class="t">' + money(p.price) + '/kg · ' + p.qty + ' kg available</div><div><span class="pill fresh">' + timeAgo(p.ts) + '</span> <span class="pill grd">' + esc(p.grade || 'Grade A') + '</span></div><div class="m">Seller: ' + esc(s.name) + ' • Site: ' + esc(p.loc) + '</div>' + (map ? '<a class="lk m" href="' + map.url + '" target="_blank" rel="noopener">📍 View Landing Site Map</a>' : '') + (p.note ? '<div>Note: ' + esc(p.note) + '</div>' : '') + (own ? '<div class="card">Your Listing</div><div class="row"><button class="btn alt sm" onclick="markSold(\'' + p.id + '\')">Mark Sold</button><button class="btn alt sm" onclick="delProduct(\'' + p.id + '\')">Delete</button></div>' : (!open ? '<div class="card">Sold out</div>' : (m ? '<h2>Order Fish</h2><form data-f="order" data-id="' + p.id + '" style="display:flex;flex-direction:column;gap:12px">' + fld('qty','Quantity (kg)','number','','required min="1" max="' + p.qty + '" step="any"') + '<div><label for="mode">Fulfillment</label><select id="mode" name="mode"><option>Landing Site Pickup</option><option>Entebbe Boda Express (+UGX 3,000)</option></select></div>' + fld('date','Date','date','','required') + '<button class="btn momo-btn">Pay MoMo Escrow</button></form>' : '<a class="btn" href="#/welcome">Log in to order</a>')));
     }
   }
   else if(r === 'ledger'){
@@ -368,7 +364,7 @@ function render(){
   else if(r === 'stock'){
     tab = 's';
     var mn = data.products.filter(function(p){ return p.sellerId === uid; }).sort(function(a,b){ return b.ts - a.ts; });
-    h = '<h1>Seller Dashboard</h1><a class="btn" href="#/add">' + esc(T('add_stock')) + '</a><h2>My Inventory</h2>' + (mn.length ? mn.map(function(p){ return '<div class="card"><div class="t">' + esc(p.type) + ' · ' + esc(p.cond) + '</div><div>' + money(p.price) + '/kg · ' + p.qty + ' kg remaining</div><div><span class="pill fresh">⏱ ' + timeAgo(p.ts) + '</span></div><div class="row"><button class="btn alt sm" onclick="markSold(\'' + p.id + '\')">Mark Sold</button><button class="btn alt sm" onclick="delProduct(\'' + p.id + '\')">Delete</button></div></div>'; }).join('') : '<div class="empty">No stock listed.</div>');
+    h = '<h1>Seller Dashboard</h1><a class="btn" href="#/add">' + esc(T('add_stock')) + '</a><h2>My Inventory</h2>' + (mn.length ? mn.map(function(p){ return '<div class="card"><div class="t">' + esc(p.type) + ' · ' + esc(p.cond) + '</div><div>' + money(p.price) + '/kg · ' + p.qty + ' kg remaining</div><div><span class="pill fresh">' + timeAgo(p.ts) + '</span></div><div class="row"><button class="btn alt sm" onclick="markSold(\'' + p.id + '\')">Mark Sold</button><button class="btn alt sm" onclick="delProduct(\'' + p.id + '\')">Delete</button></div></div>'; }).join('') : '<div class="empty">No stock listed.</div>');
   }
   else if(r === 'add'){
     tab = 's';
@@ -379,11 +375,11 @@ function render(){
     var got = data.orders.filter(function(o){ return o.sellerId === uid; }).sort(function(a,b){ return b.ts - a.ts; });
     var sent = data.orders.filter(function(o){ return o.buyerId === uid; }).sort(function(a,b){ return b.ts - a.ts; });
     var od = function(o, s){
-      return '<div class="card"><div class="t">' + esc(o.type) + ' · ' + o.qty + ' kg · Total: ' + money(o.qty * o.price) + '</div><div class="m">' + (s ? 'Buyer: ' + esc(o.buyerName) : 'Seller: ' + esc(o.sellerName)) + '</div><div>' + status(o.deal ? 'deal' : o.status) + '</div>' +
+      return '<div class="card"><div class="t">' + esc(o.type) + ' · ' + o.qty + ' kg · Total: ' + money(o.qty * o.price) + '</div><div class="m">' + (s ? 'Buyer: ' + esc(o.buyerName) : 'Seller: ' + esc(o.sellerName)) + '</div><div>' + (o.deal ? 'deal' : o.status) + '</div>' +
       (s ? ((o.status==='pending'||o.status==='paid') ? '<div class="row"><button class="btn sm" onclick="updateOrderStatus(\'' + o.id + '\',\'accepted\')">Accept</button></div>' : (o.status==='accepted' ? '<button class="btn sm" onclick="updateOrderStatus(\'' + o.id + '\',\'completed\')">Mark Delivered</button>' : '')) : ((!s && o.status==='paid') ? '<button class="btn alt sm" onclick="raiseDispute(\'' + o.id + '\')">Raise Quality Dispute</button>' : '')) +
       ((!s && o.status==='completed' && !o.deal) ? '<button class="btn sm" onclick="confirmReceipt(\'' + o.id + '\')">Confirm Receipt & Release Escrow</button>' : '') + '</div>';
     };
-    h = '<h1>Order Pipeline & Escrow</h1>' + (m.role !== 'Consumer' && m.role !== 'Restaurant/Hotel Buyer' ? '<h2>Incoming Requests</h2>' + (got.length ? got.map(function(o){ return od(o,1); }).join('') : '<div class="empty">No requests.</div>') : '') + '<h2>My Placed Orders</h2>' + (sent.length ? sent.map(function(o){ return od(o,0); }).join('') : '<div class="empty">No orders placed.</div>');
+    h = '<h1>Order Pipeline & Escrow</h1>' + (m.role !== 'Consumer' && m.role !== 'Restaurant/Hotel Buyer' ? '<h2>Incoming Requests</h2>' + (got.length ? got.map(function(o){ return od(o,1); }).join('') : '<div class="empty">No requests.</div>') : '') + '<h2>My Orders</h2>' + (sent.length ? sent.map(function(o){ return od(o,0); }).join('') : '<div class="empty">No orders placed.</div>');
   }
   else if(r === 'profile'){
     tab = 'p';
@@ -525,11 +521,6 @@ document.addEventListener('submit', function(e){
     R.stock[uid] = R.stock[uid] || { items:[] };
     R.stock[uid].items.push({ id:nid(), type:d.type, grade:d.grade, cond:d.cond, qty:+d.qty, price:+d.price, loc:d.loc, note:(d.note||'').trim(), status:'active', ts:Date.now() });
     saveLocal(); toast('Catch posted!'); go('#/stock');
-  }
-  else if(f.dataset.f === 'order'){
-    var p = data.products.find(function(x){ return x.id === f.dataset.id; });
-    if(!p || +d.qty > p.qty || +d.qty <= 0) return toast('Quantity unavailable');
-    openMoMo({ product:p, qty:+d.qty, mode:d.mode, date:d.date });
   }
 });
 
