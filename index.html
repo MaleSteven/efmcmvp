@@ -93,12 +93,12 @@ var GRADES = ['Grade A (>1.5kg)','Grade B (0.8-1.4kg)','Grade C (<0.8kg)','Proce
 var ROLES = ['Fisherman','Fish farmer','Fish vendor','Restaurant/Hotel Buyer','Consumer','Entebbe Boda Carrier'];
 var COND = ['Fresh today','Smoked','Dried'];
 
-// Multi-fallback source arrays for images
+// Strictly mapped only to your 4 local images
 var FS_IMG = {
-  "Tilapia": ["images.jpg", "./images.jpg", "images/images.jpg", "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=400&q=80"],
-  "Catfish": ["images3.jpg", "./images3.jpg", "images/images3.jpg", "https://images.unsplash.com/photo-1534043464124-3be32fe000c9?auto=format&fit=crop&w=400&q=80"],
-  "Nile perch": ["images4.jpg", "./images4.jpg", "images/images4.jpg", "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=400&q=80"],
-  "Mukene": ["images5.jpg", "./images5.jpg", "images/images5.jpg", "https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=400&q=80"]
+  "Tilapia": "images.jpg",
+  "Catfish": "images3.jpg",
+  "Nile perch": "images4.jpg",
+  "Mukene": "images5.jpg"
 };
 
 var currentLang = 'en';
@@ -239,18 +239,9 @@ function derive(){
   });
 }
 
-function handleImgError(el, type){
-  var srcs = FS_IMG[type] || FS_IMG["Tilapia"];
-  var currentIdx = parseInt(el.getAttribute('data-idx') || '0', 10);
-  if (currentIdx + 1 < srcs.length) {
-    el.setAttribute('data-idx', currentIdx + 1);
-    el.src = srcs[currentIdx + 1];
-  }
-}
-
 function fishImg(t){
-  var srcs = FS_IMG[t] || FS_IMG["Tilapia"];
-  return '<img src="' + srcs[0] + '" alt="' + esc(t) + '" data-idx="0" onerror="handleImgError(this, \'' + esc(t) + '\')">';
+  var imgFile = FS_IMG[t] || "images.jpg";
+  return '<img src="' + imgFile + '" alt="' + esc(t) + '">';
 }
 
 function activeProducts(){
