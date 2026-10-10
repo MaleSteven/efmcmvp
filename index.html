@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entebbe Fish Market Connect (EFMC)</title>
+<style>
+:root{--bg:#F3F7F6;--cd:#fff;--tx:#10262B;--mu:#46606A;--bd:#D0DFE2;--pr:#0E4F5C;--lk:#0E4F5C;--ac:#B84F00;--ph:#BFD8DB;--pt:#25505A;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1A1D;--cd:#13272B;--tx:#E6F1F2;--mu:#9DB8BD;--bd:#264349;--pr:#1F6B7B;--lk:#7FC4D1;--ph:#24464D;--pt:#BFE0E4}}
+:root[data-theme="dark"]{--bg:#0C1A1D;--cd:#13272B;--tx:#E6F1F2;--mu:#9DB8BD;--bd:#264349;--pr:#1F6B7B;--lk:#7FC4D1;--ph:#24464D;--pt:#BFE0E4}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,sans-serif}
+#app{max-width:640px;margin:0 auto;padding-bottom:84px;min-height:100vh}
+header{background:var(--pr);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+header b{font-size:13px;letter-spacing:.05em;text-transform:uppercase}header i{display:block;font-size:11px;font-style:normal;color:#E1F0F2}
+main{padding:16px;display:flex;flex-direction:column;gap:12px}
+h1{margin:0;font-size:22px;line-height:1.2}h2{margin:8px 0 0;font-size:16px}
+label{display:block;font-size:13px;font-weight:600;color:var(--mu);margin-bottom:4px}
+input,select,textarea{width:100%;box-sizing:border-box;min-height:44px;border:1px solid var(--mu);border-radius:8px;padding:10px 12px;font:inherit;background:var(--cd);color:var(--tx)}
+.btn{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:44px;padding:0 14px;border:2px solid var(--ac);border-radius:8px;background:var(--ac);color:#fff;font:700 14px system-ui,sans-serif;text-decoration:none;cursor:pointer;width:100%}
+.alt{background:var(--cd);color:var(--lk);border-color:var(--lk)}.sm{min-height:36px;font-size:12px;width:auto;flex:1}.ussd-btn{background:#000;color:#0f0;border-color:#000;font-family:monospace}.momo-btn{background:#FFCC00;color:#000;border-color:#E6B800}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.pc{flex-direction:row;align-items:center;gap:12px;color:inherit;text-decoration:none}
+.ph{width:76px;height:76px;border-radius:8px;background:var(--ph);color:var(--pt);display:flex;align-items:center;justify-content:center;font-size:11px;text-align:center;flex:none;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+.ph svg{width:100%;height:100%;display:block;border-radius:8px}
+.big{width:100%;height:200px;font-size:14px;overflow:hidden}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:110px}.col{flex:1;min-width:0}
+.t{font-weight:700}.m{font-size:13px;color:var(--mu)}.pill{display:inline-block;font-size:11px;font-weight:700;border:1px solid var(--mu);border-radius:20px;padding:2px 8px;color:var(--tx)}
+.pill.grd{border-color:var(--ac);color:var(--ac)}.pill.fresh{border-color:#107C41;color:#107C41;background:#E8F5E9}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--cd);border-top:1px solid var(--bd)}
+nav div{max-width:640px;margin:0 auto;display:flex}nav a{flex:1;text-align:center;padding:10px 2px;min-height:44px;box-sizing:border-box;font-size:11px;color:var(--mu);text-decoration:none}
+nav a.on{color:var(--lk);font-weight:700}nav em{background:var(--ac);color:#fff;border-radius:10px;padding:0 5px;font-style:normal;font-size:10px;margin-left:2px}
+#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:13px;display:none;max-width:90%;z-index:9}
+#smsBanner{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#1A252C;color:#E6F1F2;border:1px solid #3A505D;padding:12px 16px;border-radius:10px;font-size:13px;display:none;max-width:90%;z-index:101;box-shadow:0 8px 20px rgba(0,0,0,0.4)}
+a.lk{color:var(--lk);font-weight:700}.empty{text-align:center;color:var(--mu);padding:20px 0}
+summary{min-height:40px;display:flex;align-items:center;font-weight:700;color:var(--lk);cursor:pointer}
+.msgs{max-height:200px;overflow:auto;display:flex;flex-direction:column;gap:6px;margin:4px 0 8px}
+.msg{background:var(--ph);border-radius:8px;padding:6px 10px;align-self:flex-start;max-width:85%;word-break:break-word}
+.msg.me{align-self:flex-end;background:var(--pr);color:#fff}.msg.me .m{color:#E1F0F2}
+.prow{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}.prow:last-child{border:0}.prow .m{text-align:right}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.ussd-screen{background:#111;color:#0f0;font-family:monospace;padding:20px;border-radius:12px;width:100%;max-width:340px}
+.ussd-screen h3{margin:0 0 10px;font-size:15px;color:#fff;border-bottom:1px solid #333;padding-bottom:5px}
+.ussd-body{min-height:110px;white-space:pre-wrap;font-size:13px;line-height:1.4}
+.ussd-input{background:#222;border:1px solid #444;color:#0f0;padding:8px;margin-top:10px;width:100%;box-sizing:border-box}
+.momo-box{background:var(--cd);padding:20px;border-radius:12px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" role="status"></div>
+<div id="smsBanner" role="alert"></div>
+
+<!-- USSD Simulator Modal -->
+<div id="ussdModal" class="modal">
+  <div class="ussd-screen">
+    <h3>EFMC Mobile (*284*50#)</h3>
+    <div id="ussdBody" class="ussd-body">Loading session...</div>
+    <input id="ussdInput" class="ussd-input" placeholder="Enter option..." autofocus>
+    <div class="row" style="margin-top:10px">
+      <button class="btn sm alt" onclick="closeUSSD()">Exit</button>
+      <button class="btn sm ussd-btn" onclick="sendUSSD()">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Money Checkout Modal -->
+<div id="momoModal" class="modal">
+  <div class="momo-box">
+    <div class="t" style="font-size:18px">MTN / Airtel MoMo Escrow</div>
+    <div id="momoDetails" class="m">Loading order details...</div>
+    <div>
+      <label for="momoPin">Enter Mobile Money PIN</label>
+      <input id="momoPin" type="password" maxlength="4" placeholder="••••">
+    </div>
+    <div class="row">
+      <button class="btn sm alt" onclick="closeMoMo()">Cancel</button>
+      <button class="btn sm momo-btn" onclick="confirmMoMo()">Pay Escrow</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var LOC_MAPS = {
+  'Kasenyi Landing Site': { lat: 0.0522, lng: 32.5511, url: 'https://maps.google.com/?q=0.0522,32.5511' },
+  'Kigungu Landing Site': { lat: 0.0431, lng: 32.4388, url: 'https://maps.google.com/?q=0.0431,32.4388' },
+  'Nakiwogo Landing Site': { lat: 0.0614, lng: 32.4542, url: 'https://maps.google.com/?q=0.0614,32.4542' },
+  'Entebbe Main Market': { lat: 0.0601, lng: 32.4632, url: 'https://maps.google.com/?q=0.0601,32.4632' },
+  'Kitoro Market': { lat: 0.0578, lng: 32.4608, url: 'https://maps.google.com/?q=0.0578,32.4608' },
+  'Katabi': { lat: 0.0911, lng: 32.4812, url: 'https://maps.google.com/?q=0.0911,32.4812' },
+  'Abaita Ababiri': { lat: 0.1142, lng: 32.4921, url: 'https://maps.google.com/?q=0.1142,32.4921' }
+};
+
+var LOCS = Object.keys(LOC_MAPS);
+var TYPES = ['Tilapia','Nile perch','Catfish','Mukene'];
+var GRADES = ['Grade A (>1.5kg)','Grade B (0.8-1.4kg)','Grade C (<0.8kg)','Processing Grade'];
+var ROLES = ['Fisherman','Fish farmer','Fish vendor','Restaurant/Hotel Buyer','Consumer','Entebbe Boda Carrier'];
+var COND = ['Fresh today','Smoked','Dried'];
+
+var FS_IMG = { "Tilapia": "images.jpg", "Nile perch": "images (4).jpg", "Catfish": "images (3).jpg", "Mukene": "images (5).jpg" };
+var FS_SVG = {
+  "Tilapia": "<svg viewBox=\"0 0 160 100\"><rect width=\"160\" height=\"100\" fill=\"#CFE7EA\"/><ellipse cx=\"80\" cy=\"50\" rx=\"44\" ry=\"26\" fill=\"#B5C494\"/><circle cx=\"46\" cy=\"44\" r=\"4\" fill=\"#fff\"/><circle cx=\"45\" cy=\"44\" r=\"2\" fill=\"#10262B\"/></svg>",
+  "Nile perch": "<svg viewBox=\"0 0 160 100\"><rect width=\"160\" height=\"100\" fill=\"#CFE7EA\"/><path d=\"M18 52 Q30 30 76 30 Q116 30 130 50 Q116 70 76 70 Z\" fill=\"#C3CED3\"/><circle cx=\"30\" cy=\"46\" r=\"4\" fill=\"#fff\"/><circle cx=\"29\" cy=\"46\" r=\"2\" fill=\"#10262B\"/></svg>",
+  "Catfish": "<svg viewBox=\"0 0 160 100\"><rect width=\"160\" height=\"100\" fill=\"#CFE7EA\"/><path d=\"M34 50 Q60 34 100 42 L130 50 L100 58 Z\" fill=\"#5E5A52\"/><circle cx=\"36\" cy=\"49\" r=\"3\" fill=\"#fff\"/><circle cx=\"35\" cy=\"49\" r=\"1.5\" fill=\"#10262B\"/></svg>",
+  "Mukene": "<svg viewBox=\"0 0 160 100\"><rect width=\"160\" height=\"100\" fill=\"#CFE7EA\"/><g transform=\"translate(30 30) scale(1.5)\"><path d=\"M0 0 Q14 -9 28 0 Q14 9 0 0Z\" fill=\"#D4DDE2\"/><circle cx=\"5\" cy=\"-1\" r=\"1.5\" fill=\"#10262B\"/></g></svg>"
+};
+
+var currentLang = 'en';
+try { currentLang = localStorage.getItem('efmc_lang') || 'en'; } catch(e){}
+
+var DICT = {
+  en: {
+    title: 'Entebbe Fish Connect',
+    sub: 'Kasenyi • Kigungu • Nakiwogo • Kitoro',
+    welcome_title: 'Direct Fish Trade Entebbe',
+    welcome_sub: 'Connecting Kasenyi, Kigungu & Nakiwogo fishermen directly with Entebbe buyers without middleman loss.',
+    browse: 'Marketplace', stock: 'My Inventory', ice: 'Cold Hubs', ledger: 'Income Ledger', boda: 'Boda Express', orders: 'Orders', profile: 'Profile', create_acc: 'Create Account', login: 'Log In', view_mkt: 'View Market Listings', price_bench: 'Live Entebbe Benchmark Prices', add_stock: '+ Post New Catch Stock'
+  },
+  lg: {
+    title: 'Entebbe Fish Connect',
+    sub: 'Kasenyi • Kigungu • Nakiwogo • Kitoro',
+    welcome_title: 'Tunda ne Gulirwa Ebyennyanja mu Entebbe',
+    welcome_sub: 'Gatta abavubi b’e Kasenyi, Kigungu n’e Nakiwogo butereevu n’abaguzyi mu Entebbe nga tewali musubuzi wa hagati.',
+    browse: 'Akatale', stock: 'Ebyennyanja Byange', ice: 'Mabayisi', ledger: 'Ebitabo', boda: 'Bodaboda', orders: 'Ebiragiro', profile: 'Ebikwata ku Nze', create_acc: 'Gula Akawunti', login: 'Yingira', view_mkt: 'Laba Ebyennyanja', price_bench: 'Emiwendo gye Ebyennyanja Leero', add_stock: '+ Teekawo Ebyennyanja'
+  }
+};
+
+var FISH_NAMES_LG = { 'Tilapia': 'Engege (Tilapia)', 'Nile perch': 'Empuuta (Nile Perch)', 'Catfish': 'Mmale (Catfish)', 'Mukene': 'Mukene' };
+
+function T(k){ return (DICT[currentLang] && DICT[currentLang][k]) || DICT.en[k] || k; }
+function toggleLang(){
+  currentLang = (currentLang === 'en') ? 'lg' : 'en';
+  try { localStorage.setItem('efmc_lang', currentLang); } catch(e){}
+  render();
+}
+
+var uid = 'local_user';
+var R = { profiles:{}, stock:{}, requests:{}, responses:{}, chat:{} };
+var data = { profiles:[], products:[], orders:[], msgs:[] };
+var F = { q:'', t:'All types', l:'All locations' };
+
+function $(s){ return document.querySelector(s); }
+function esc(s){ return String(s || '').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function money(n){ return 'UGX ' + Number(n || 0).toLocaleString('en-US'); }
+function nid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function opts(a, s){
+  return a.map(function(x){ return '<option' + (x === s ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join('');
+}
+function fld(n, l, t, v, x){
+  return '<div><label for="' + n + '">' + l + '</label><input id="' + n + '" name="' + n + '" type="' + (t||'text') + '" value="' + esc(v||'') + '" ' + (x||'') + '></div>';
+}
+
+function timeAgo(ts){
+  var hrs = Math.max(0, Math.floor((Date.now() - (ts || Date.now())) / (1000 * 60 * 60)));
+  return hrs === 0 ? 'Harvested <1h ago' : 'Harvested ' + hrs + 'h ago';
+}
+
+function toast(m){
+  var t = $('#toast'); if(!t) return;
+  t.textContent = m; t.style.display = 'block';
+  clearTimeout(toast.k);
+  toast.k = setTimeout(function(){ t.style.display = 'none'; }, 3200);
+}
+
+function smsAlert(phone, text){
+  var b = $('#smsBanner'); if(!b) return;
+  b.innerHTML = '<b>SMS Sent to ' + esc(phone) + ':</b><br>' + esc(text);
+  b.style.display = 'block';
+  clearTimeout(smsAlert.k);
+  smsAlert.k = setTimeout(function(){ b.style.display = 'none'; }, 5000);
+}
+
+function saveLocal(){
+  try { localStorage.setItem('efmc_db', JSON.stringify(R)); } catch(e){}
+  derive();
+}
+
+function seedSampleData(){
+  R = {
+    profiles: {
+      'local_user': { name: 'Patrick Ssemakula', phone: '0772123456', role: 'Fisherman', loc: 'Kasenyi Landing Site' },
+      'user_rosemary': { name: 'Rosemary Namatta', phone: '0782987654', role: 'Restaurant/Hotel Buyer', loc: 'Kitoro Market' },
+      'user_boda': { name: 'Entebbe Express Boda #42', phone: '0755112233', role: 'Entebbe Boda Carrier', loc: 'Entebbe Main Market' }
+    },
+    stock: {
+      'local_user': {
+        items: [
+          { id: 'p1', type: 'Tilapia', grade: 'Grade A (>1.5kg)', cond: 'Fresh today', qty: 40, price: 13500, loc: 'Kasenyi Landing Site', note: 'Landed at 6 AM', status: 'active', ts: Date.now() - 7200000 },
+          { id: 'p2', type: 'Nile perch', grade: 'Grade B (0.8-1.4kg)', cond: 'Fresh today', qty: 85, price: 16000, loc: 'Kigungu Landing Site', note: 'Chilled in solar ice box', status: 'active', ts: Date.now() - 14400000 }
+        ]
+      }
+    },
+    requests: {
+      'user_rosemary': {
+        list: [
+          { id: 'o1', productId: 'p1', sellerId: 'local_user', sellerName: 'Patrick Ssemakula', sellerPhone: '0772123456', type: 'Tilapia', price: 13500, buyerName: 'Rosemary Namatta', buyerPhone: '0782987654', qty: 15, mode: 'Entebbe Boda Express (+UGX 3,000)', date: new Date().toISOString().split('T')[0], ts: Date.now(), status: 'paid' }
+        ]
+      }
+    },
+    responses: {}, chat: {}
+  };
+  saveLocal();
+}
+
+function loadLocal(){
+  try {
+    var d = localStorage.getItem('efmc_db');
+    if(d) R = JSON.parse(d);
+  } catch(e){}
+  if(!R.profiles || !Object.keys(R.profiles).length) seedSampleData();
+  derive();
+}
+
+function resetDemoData(){
+  try { localStorage.removeItem('efmc_db'); } catch(e){}
+  seedSampleData();
+  toast("Demo dataset reloaded!");
+  render();
+}
+
+function me(){ return (R.profiles && R.profiles[uid]) ? Object.assign({}, R.profiles[uid], {id: uid}) : null; }
+function go(h){ location.hash = h; }
+
+function derive(){
+  data.profiles = Object.keys(R.profiles || {}).map(function(k){ return Object.assign({}, R.profiles[k], {id: k}); });
+  data.products = [];
+  Object.keys(R.stock || {}).forEach(function(u){
+    var items = R.stock[u].items || [];
+    items.forEach(function(p){ data.products.push(Object.assign({}, p, {sellerId: u})); });
+  });
+  data.orders = [];
+  Object.keys(R.requests || {}).forEach(function(u){
+    var list = R.requests[u].list || [];
+    list.forEach(function(o){
+      var r = ((R.responses[o.sellerId] || {}).m || {})[o.id];
+      var st = o.cancelled ? 'cancelled' : (o.disputed ? 'disputed' : (r ? r.s : (o.status || 'pending')));
+      var deal = (st === 'completed') && !!o.confirmed;
+      data.orders.push(Object.assign({}, o, {buyerId: u, status: st, deal: deal, doneTs: deal ? Math.max(r ? r.ts : 0, o.confirmTs || 0) : 0}));
+    });
+  });
+}
+
+function fishImg(t){
+  var imgSrc = FS_IMG[t] || "images.jpg";
+  var svgFallback = FS_SVG[t] || FS_SVG["Tilapia"];
+  return '<img src="' + imgSrc + '" alt="' + esc(t) + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';">' +
+         '<div style="display:none;width:100%;height:100%;">' + svgFallback + '</div>';
+}
+
+function activeProducts(){
+  return data.products.filter(function(p){ return p.status === 'active' && p.qty > 0; }).sort(function(a,b){ return b.ts - a.ts; });
+}
+
+function sellerOf(p){
+  return data.profiles.find(function(x){ return x.id === p.sellerId; }) || {name:'Seller', phone:'', role:''};
+}
+
+function card(p){
+  var fishLabel = currentLang === 'lg' ? (FISH_NAMES_LG[p.type] || p.type) : p.type;
+  return '<a class="card pc" href="#/product/' + p.id + '">' +
+           '<div class="ph">' + fishImg(p.type) + '</div>' +
+           '<div class="col">' +
+             '<div class="t">' + esc(fishLabel) + ' · ' + esc(p.cond) + '</div>' +
+             '<div>' + money(p.price) + '/kg · ' + p.qty + ' kg</div>' +
+             '<div><span class="pill fresh">⏱ ' + timeAgo(p.ts) + '</span> <span class="pill grd">' + esc(p.grade || 'Grade A') + '</span></div>' +
+             '<div class="m">' + esc(sellerOf(p).name) + ' · ' + esc(p.loc) + '</div>' +
+           '</div>' +
+         '</a>';
+}
+
+function res(){
+  var q = F.q.toLowerCase();
+  var r = activeProducts().filter(function(p){
+    var matchType = (F.t === 'All types' || p.type === F.t);
+    var matchLoc = (F.l === 'All locations' || p.loc === F.l);
+    var matchQ = !q || (p.type + ' ' + sellerOf(p).name + ' ' + p.loc).toLowerCase().indexOf(q) !== -1;
+    return matchType && matchLoc && matchQ;
+  });
+  return r.length ? r.map(card).join('') : '<div class="empty">' + (currentLang==='lg'?'Tewali byennyanja biteekeddwawo.':'No fish listed yet. Post stock from "My Inventory".') + '</div>';
+}
+
+function board(){
+  var deals = data.orders.filter(function(o){ return o.deal; });
+  return TYPES.map(function(t){
+    var fishLabel = currentLang === 'lg' ? (FISH_NAMES_LG[t] || t) : t;
+    var d = deals.filter(function(o){ return o.type === t; }).sort(function(a,b){ return b.doneTs - a.doneTs; });
+    var ls = activeProducts().filter(function(p){ return p.type === t; });
+    var v = d.length ? [money(d[0].price) + '/kg', 'last deal confirmed'] : ls.length ? [money(ls[0].price) + '/kg', 'asking price'] : ['No price benchmark', 'no listings'];
+    return '<div class="prow"><span class="t">' + esc(fishLabel) + '</span><span><b>' + v[0] + '</b><div class="m">' + v[1] + '</div></span></div>';
+  }).join('');
+}
+
+function shell(b, tab){
+  var m = me();
+  var pend = data.orders.filter(function(o){ return o.sellerId === uid && o.status === 'pending'; }).length;
+  var navHtml = m ? '<nav><div>' +
+    '<a href="#/browse"' + (tab==='b'?' class="on"':'') + '>' + T('browse') + '</a>' +
+    (m.role === 'Entebbe Boda Carrier' ? '<a href="#/boda"' + (tab==='d'?' class="on"':'') + '>' + T('boda') + '</a>' : '') +
+    (m.role !== 'Consumer' && m.role !== 'Restaurant/Hotel Buyer' && m.role !== 'Entebbe Boda Carrier' ? '<a href="#/stock"' + (tab==='s'?' class="on"':'') + '>' + T('stock') + '</a><a href="#/ledger"' + (tab==='l'?' class="on"':'') + '>' + T('ledger') + '</a>' : '') +
+    '<a href="#/ice"' + (tab==='i'?' class="on"':'') + '>' + T('ice') + '</a>' +
+    '<a href="#/orders"' + (tab==='o'?' class="on"':'') + '>' + T('orders') + (pend ? '<em>' + pend + '</em>' : '') + '</a>' +
+    '<a href="#/profile"' + (tab==='p'?' class="on"':'') + '>' + T('profile') + '</a>' +
+  '</div></nav>' : '';
+
+  return '<header><div><b>' + esc(T('title')) + '</b><i>' + esc(T('sub')) + '</i></div><div style="display:flex;gap:6px"><button class="btn sm alt" onclick="toggleLang()">' + (currentLang==='en'?'Luganda':'English') + '</button><button class="btn sm ussd-btn" onclick="openUSSD()">*284*50#</button></div></header><main>' + b + '</main>' + navHtml;
+}
+
+function switchRole(targetUid){
+  uid = targetUid;
+  toast("Switched active view to " + me().name);
+  render();
+}
+
+function render(){
+  var app = $('#app'); if(!app) return;
+  var parts = (location.hash || '').split('/');
+  var r = parts[1] || '';
+  var a = parts[2] || '';
+  var m = me();
+  var h = '', tab = '';
+
+  if(!m && ['welcome','register','browse','product'].indexOf(r) === -1) return go('#/welcome');
+  if(!r) return go(m ? '#/browse' : '#/welcome');
+
+  if(r === 'welcome'){
+    h = '<h1>' + esc(T('welcome_title')) + '</h1><p class="m">' + esc(T('welcome_sub')) + '</p><a class="btn" href="#/register">' + esc(T('create_acc')) + '</a><button class="btn alt" onclick="quickLogin()">' + esc(T('login')) + '</button><a class="lk" href="#/browse" style="text-align:center;padding:12px">' + esc(T('view_mkt')) + '</a>';
+  }
+  else if(r === 'register' || r === 'edit'){
+    var e = (r === 'edit' && m);
+    h = '<h1>' + (e ? 'Edit Profile' : 'Create Account') + '</h1><form data-f="reg" style="display:flex;flex-direction:column;gap:12px">' + fld('name','Full Name','text',e?m.name:'','required') + fld('phone','Phone Number','tel',e?m.phone:'','required') + '<div><label for="role">Role</label><select id="role" name="role">' + opts(ROLES,e?m.role:'') + '</select></div><div><label for="loc">Location</label><select id="loc" name="loc">' + opts(LOCS,e?m.loc:'') + '</select></div><button class="btn">' + (e ? 'Save' : 'Register') + '</button></form>';
+    tab = e ? 'p' : '';
+  }
+  else if(r === 'browse'){
+    tab = 'b';
+    h = '<h1>' + esc(T('browse')) + '</h1><section class="card"><div class="t">' + esc(T('price_bench')) + '</div>' + board() + '</section><form id="flt" style="display:flex;flex-direction:column;gap:10px"><div><label for="q">Search</label><input id="q" name="q" type="search" placeholder="Search fish or landing site..." value="' + esc(F.q) + '"></div><div class="row"><select name="t">' + opts(['All types'].concat(TYPES), F.t) + '</select><select name="l">' + opts(['All locations'].concat(LOCS), F.l) + '</select></div></form><div id="res" style="display:flex;flex-direction:column;gap:10px">' + res() + '</div>';
+  }
+  else if(r === 'product'){
+    tab = 'b';
+    var p = data.products.find(function(x){ return x.id === a; });
+    if(!p){
+      h = '<div class="empty">Listing not found.</div><a class="btn alt" href="#/browse">Back</a>';
+    } else {
+      var s = sellerOf(p);
+      var own = p.sellerId === uid;
+      var open = p.status === 'active' && p.qty > 0;
+      var map = LOC_MAPS[p.loc];
+      var fishLabel = currentLang === 'lg' ? (FISH_NAMES_LG[p.type] || p.type) : p.type;
+      h = '<a class="lk" href="#/browse">← Back</a><div class="ph big">' + fishImg(p.type) + '</div><h1>' + esc(fishLabel) + ' (' + esc(p.cond) + ')</h1><div class="t">' + money(p.price) + '/kg · ' + p.qty + ' kg available</div><div><span class="pill fresh">⏱ ' + timeAgo(p.ts) + '</span> <span class="pill grd">' + esc(p.grade || 'Grade A') + '</span></div><div class="m">Seller: ' + esc(s.name) + ' • Site: ' + esc(p.loc) + '</div>' + (map ? '<a class="lk m" href="' + map.url + '" target="_blank" rel="noopener">📍 View Landing Site Map</a>' : '') + (p.note ? '<div>Note: ' + esc(p.note) + '</div>' : '') + (own ? '<div class="card">Your Listing</div><div class="row"><button class="btn alt sm" onclick="markSold(\'' + p.id + '\')">Mark Sold</button><button class="btn alt sm" onclick="delProduct(\'' + p.id + '\')">Delete</button></div>' : (!open ? '<div class="card">Sold out</div>' : (m ? '<h2>Order Fish</h2><form data-f="order" data-id="' + p.id + '" style="display:flex;flex-direction:column;gap:12px">' + fld('qty','Quantity (kg)','number','','required min="1" max="' + p.qty + '" step="any"') + '<div><label for="mode">Fulfillment</label><select id="mode" name="mode"><option>Landing Site Pickup</option><option>Entebbe Boda Express (+UGX 3,000)</option></select></div>' + fld('date','Date','date','','required') + '<button class="btn momo-btn">Pay MoMo Escrow</button></form>' : '<a class="btn" href="#/welcome">Log in to order</a>')));
+    }
+  }
+  else if(r === 'ledger'){
+    tab = 'l';
+    var myDeals = data.orders.filter(function(o){ return o.sellerId === uid && o.deal; });
+    var gross = myDeals.reduce(function(sum, o){ return sum + (o.qty * o.price); }, 0);
+    var comm = Math.round(gross * 0.035);
+    h = '<h1>Vendor & Platform Financial Ledger</h1><div class="card"><div class="t">EFMC Unit Economics & Platform Model</div><div class="m">Platform Commission Rate: <b>3.5% per B2B escrow order</b><br>USSD Listing Micro-fee: <b>UGX 300 per session</b></div></div><div class="row"><div class="card"><span class="m">My Gross Sales</span><b>' + money(gross) + '</b></div><div class="card"><span class="m">3.5% Fee Paid</span><b>' + money(comm) + '</b></div><div class="card"><span class="m">My Net Payout</span><b style="color:var(--ac)">' + money(gross - comm) + '</b></div></div><h2>My Confirmed Deals (' + myDeals.length + ')</h2>' + (myDeals.length ? myDeals.map(function(o){ return '<div class="card"><div class="t">' + esc(o.type) + ' · ' + o.qty + ' kg</div><div>Gross: ' + money(o.qty * o.price) + ' | Commission (3.5%): ' + money(o.qty * o.price * 0.035) + '</div></div>'; }).join('') : '<div class="empty">No deals completed yet.</div>');
+  }
+  else if(r === 'boda'){
+    tab = 'd';
+    var dispatches = data.orders.filter(function(o){ return o.mode && o.mode.indexOf('Boda') !== -1 && o.status !== 'cancelled'; });
+    h = '<h1>Boda Express Dispatch Pipeline</h1>' + (dispatches.length ? dispatches.map(function(o){ return '<div class="card"><div class="t">' + esc(o.type) + ' · ' + o.qty + ' kg</div><div class="m">Pickup: ' + esc(o.sellerName) + ' (' + esc(o.sellerPhone) + ')</div><div class="m">Drop-off: ' + esc(o.buyerName) + ' (' + esc(o.buyerPhone) + ')</div><div>Delivery Fee: <b>UGX 3,000</b></div><button class="btn sm" onclick="smsAlert(\'' + o.buyerPhone + '\', \'Boda carrier accepted delivery for ' + o.qty + 'kg ' + o.type + '.\'); toast(\'Task Accepted!\')">Accept Dispatch</button></div>'; }).join('') : '<div class="empty">No dispatches available.</div>');
+  }
+  else if(r === 'ice'){
+    tab = 'i';
+    h = '<h1>Cold Storage & Solar Ice Hubs</h1><div class="card"><div class="t">Kitooro Solar Cold Hub</div><div class="m">Available Space: 450 kg</div><div>UGX 1,500 / 10kg block</div><button class="btn sm" onclick="smsAlert(\'0772000111\', \'Ice reservation received for Kitooro Hub.\'); toast(\'Ice Reserved!\')">Reserve Ice Block</button></div><div class="card"><div class="t">Nakiwogo Cold Storage Hub</div><div class="m">Available Space: 280 kg</div><div>UGX 1,800 / 10kg block</div><button class="btn sm" onclick="smsAlert(\'0772000333\', \'Ice reservation received for Nakiwogo Hub.\'); toast(\'Ice Reserved!\')">Reserve Ice Block</button></div><div class="card"><div class="t">Kasenyi Solar Storage Locker</div><div class="m">Available Space: 120 kg</div><div>UGX 2,000 / night</div><button class="btn sm" onclick="smsAlert(\'0772000222\', \'Locker reservation request received for Kasenyi.\'); toast(\'Locker Reserved!\')">Reserve Locker Space</button></div>';
+  }
+  else if(r === 'stock'){
+    tab = 's';
+    var mn = data.products.filter(function(p){ return p.sellerId === uid; }).sort(function(a,b){ return b.ts - a.ts; });
+    h = '<h1>Seller Dashboard</h1><a class="btn" href="#/add">' + esc(T('add_stock')) + '</a><h2>My Inventory</h2>' + (mn.length ? mn.map(function(p){ return '<div class="card"><div class="t">' + esc(p.type) + ' · ' + esc(p.cond) + '</div><div>' + money(p.price) + '/kg · ' + p.qty + ' kg remaining</div><div><span class="pill fresh">⏱ ' + timeAgo(p.ts) + '</span></div><div class="row"><button class="btn alt sm" onclick="markSold(\'' + p.id + '\')">Mark Sold</button><button class="btn alt sm" onclick="delProduct(\'' + p.id + '\')">Delete</button></div></div>'; }).join('') : '<div class="empty">No stock listed.</div>');
+  }
+  else if(r === 'add'){
+    tab = 's';
+    h = '<h1>Post Catch / Stock</h1><form data-f="add" style="display:flex;flex-direction:column;gap:12px"><div><label for="type">Fish Type</label><select id="type" name="type">' + opts(TYPES) + '</select></div><div><label for="grade">Grade</label><select id="grade" name="grade">' + opts(GRADES) + '</select></div><div><label for="cond">Condition</label><select id="cond" name="cond">' + opts(COND) + '</select></div><div class="row">' + fld('qty','Qty (kg)','number','','required min="1"') + fld('price','Price/kg (UGX)','number','','required min="500"') + '</div><div><label for="loc">Site</label><select id="loc" name="loc">' + opts(LOCS,m?m.loc:'') + '</select></div>' + fld('note','Note (optional)') + '<button class="btn">Publish Listing</button><a class="btn alt" href="#/stock">Cancel</a></form>';
+  }
+  else if(r === 'orders'){
+    tab = 'o';
+    var got = data.orders.filter(function(o){ return o.sellerId === uid; }).sort(function(a,b){ return b.ts - a.ts; });
+    var sent = data.orders.filter(function(o){ return o.buyerId === uid; }).sort(function(a,b){ return b.ts - a.ts; });
+    var od = function(o, s){
+      return '<div class="card"><div class="t">' + esc(o.type) + ' · ' + o.qty + ' kg · Total: ' + money(o.qty * o.price) + '</div><div class="m">' + (s ? 'Buyer: ' + esc(o.buyerName) : 'Seller: ' + esc(o.sellerName)) + '</div><div>' + status(o.deal ? 'deal' : o.status) + '</div>' +
+      (s ? ((o.status==='pending'||o.status==='paid') ? '<div class="row"><button class="btn sm" onclick="updateOrderStatus(\'' + o.id + '\',\'accepted\')">Accept</button></div>' : (o.status==='accepted' ? '<button class="btn sm" onclick="updateOrderStatus(\'' + o.id + '\',\'completed\')">Mark Delivered</button>' : '')) : ((!s && o.status==='paid') ? '<button class="btn alt sm" onclick="raiseDispute(\'' + o.id + '\')">Raise Quality Dispute</button>' : '')) +
+      ((!s && o.status==='completed' && !o.deal) ? '<button class="btn sm" onclick="confirmReceipt(\'' + o.id + '\')">Confirm Receipt & Release Escrow</button>' : '') + '</div>';
+    };
+    h = '<h1>Order Pipeline & Escrow</h1>' + (m.role !== 'Consumer' && m.role !== 'Restaurant/Hotel Buyer' ? '<h2>Incoming Requests</h2>' + (got.length ? got.map(function(o){ return od(o,1); }).join('') : '<div class="empty">No requests.</div>') : '') + '<h2>My Placed Orders</h2>' + (sent.length ? sent.map(function(o){ return od(o,0); }).join('') : '<div class="empty">No orders placed.</div>');
+  }
+  else if(r === 'profile'){
+    tab = 'p';
+    h = '<h1>Profile & Demo Switcher</h1><div class="card"><div class="t">' + esc(m.name) + '</div><div>Role: ' + esc(m.role) + ' • Site: ' + esc(m.loc) + '</div><div class="m">Contact: ' + esc(m.phone) + '</div></div><h2>Quick Role Switcher</h2><div class="row"><button class="btn sm alt" onclick="switchRole(\'local_user\')">Patrick (Fisherman)</button><button class="btn sm alt" onclick="switchRole(\'user_rosemary\')">Rosemary (Hotel Buyer)</button><button class="btn sm alt" onclick="switchRole(\'user_boda\')">Boda Carrier</button></div><a class="btn" href="#/edit" style="margin-top:10px">Edit Profile Details</a><button class="btn alt sm" style="margin-top:10px" onclick="resetDemoData()">Reset All Demo Data</button>';
+  }
+  else {
+    h = '<div class="empty">Page not found.</div><a class="btn alt" href="#/browse">Browse</a>';
+  }
+
+  app.innerHTML = shell(h, tab);
+}
+
+function quickLogin(){
+  if(!R.profiles[uid]){
+    R.profiles[uid] = { name: 'Patrick Ssemakula', phone: '0772123456', role: 'Fisherman', loc: 'Kasenyi Landing Site' };
+    saveLocal();
+  }
+  go('#/browse');
+}
+
+function markSold(pid){
+  if(!R.stock[uid]) return;
+  R.stock[uid].items = (R.stock[uid].items || []).map(function(p){ return p.id === pid ? Object.assign({}, p, {status:'sold', qty:0}) : p; });
+  saveLocal(); toast('Marked as sold out'); render();
+}
+
+function delProduct(pid){
+  if(!R.stock[uid]) return;
+  R.stock[uid].items = (R.stock[uid].items || []).filter(function(p){ return p.id !== pid; });
+  saveLocal(); toast('Listing deleted'); go('#/stock');
+}
+
+function updateOrderStatus(oid, st){
+  R.responses[uid] = R.responses[uid] || { m:{} };
+  R.responses[uid].m[oid] = { s: st, ts: Date.now() };
+  saveLocal(); toast('Order status updated'); render();
+}
+
+function raiseDispute(oid){
+  Object.keys(R.requests || {}).forEach(function(u){
+    (R.requests[u].list || []).forEach(function(o){
+      if(o.id === oid){ o.disputed = true; }
+    });
+  });
+  saveLocal(); smsAlert('0772000111', 'Escrow frozen! Dispute raised for order #' + oid); toast('Dispute Raised. Escrow payout held.'); render();
+}
+
+function confirmReceipt(oid){
+  Object.keys(R.requests || {}).forEach(function(u){
+    (R.requests[u].list || []).forEach(function(o){
+      if(o.id === oid){ o.confirmed = true; o.confirmTs = Date.now(); }
+    });
+  });
+  saveLocal(); toast('Escrow released! Deal logged on Benchmark Board.'); render();
+}
+
+var currentMoMoOrder = null;
+function openMoMo(orderData){
+  currentMoMoOrder = orderData;
+  var total = orderData.qty * orderData.price;
+  var comm = Math.round(total * 0.035);
+  var momoDetails = $('#momoDetails');
+  if(momoDetails) momoDetails.innerHTML = 'Order: <b>' + orderData.qty + 'kg ' + orderData.type + '</b><br>Subtotal: ' + money(total) + '<br>EFMC 3.5% Escrow Fee: ' + money(comm) + '<br><b>Total Payable: ' + money(total + comm) + '</b>';
+  var momoModal = $('#momoModal');
+  if(momoModal) momoModal.style.display = 'flex';
+}
+function closeMoMo(){
+  var momoModal = $('#momoModal'); if(momoModal) momoModal.style.display = 'none';
+  var pin = $('#momoPin'); if(pin) pin.value = '';
+}
+function confirmMoMo(){
+  var pinEl = $('#momoPin');
+  var pin = pinEl ? pinEl.value.trim() : '';
+  if(pin.length < 4) return toast('Please enter a 4-digit PIN');
+  closeMoMo();
+  var o = currentMoMoOrder;
+  var s = sellerOf(o.product);
+  var m = me();
+  R.requests[uid] = R.requests[uid] || { list:[] };
+  R.requests[uid].list.push({ id:nid(), productId:o.product.id, sellerId:o.product.sellerId, sellerName:s.name, sellerPhone:s.phone, type:o.product.type, price:o.product.price, buyerName:m.name, buyerPhone:m.phone, qty:+o.qty, mode:o.mode, date:o.date, ts:Date.now(), status:'paid' });
+  saveLocal();
+  smsAlert(s.phone, 'New Paid Order! ' + m.name + ' paid ' + money(o.qty * o.product.price) + ' via MoMo Escrow.');
+  toast('MoMo Payment Successful!');
+  go('#/orders');
+}
+
+var ussdState = 'MAIN';
+function openUSSD(){
+  var m = $('#ussdModal'); if(m) m.style.display = 'flex';
+  ussdState = 'MAIN';
+  updateUSSD('Welcome to Entebbe Fish Connect (*284*50#)\n1. Check Market Prices\n2. List Catch (UGX 300 Fee)\n3. Reserve Cold Hubs\n4. Contact Agent');
+}
+function closeUSSD(){
+  var m = $('#ussdModal'); if(m) m.style.display = 'none';
+  var inp = $('#ussdInput'); if(inp) inp.value = '';
+}
+function sendUSSD(){
+  var inp = $('#ussdInput');
+  var val = inp ? inp.value.trim() : '';
+  if(inp) inp.value = '';
+  if(ussdState === 'MAIN'){
+    if(val === '1') updateUSSD('Live Benchmark:\nTilapia: UGX 13,500/kg\nNile Perch: UGX 16,000/kg\n0. Back');
+    else if(val === '2') updateUSSD('Enter Fish & Qty (e.g. Tilapia 50kg):\n0. Back');
+    else if(val === '3') updateUSSD('Select Storage Hub:\n1. Kasenyi Hub\n2. Nakiwogo Hub\n0. Back');
+    else updateUSSD('Agent Contact:\nCall 0772000111 (Kasenyi)\n0. Back');
+  } else {
+    smsAlert('0772000111', 'USSD Session completed (*284*50#).');
+    updateUSSD('Request processed!\n0. Main Menu');
+    ussdState = 'MAIN';
+  }
+}
+function updateUSSD(txt){ var b = $('#ussdBody'); if(b) b.textContent = txt; }
+
+window.addEventListener('hashchange', function(){ render(); scrollTo(0,0); });
+
+document.addEventListener('input', function(e){
+  var f = e.target.closest('#flt'); if(!f) return;
+  var qEl = $('#q'), tEl = $('select[name="t"]'), lEl = $('select[name="l"]');
+  F = { q: qEl ? qEl.value : '', t: tEl ? tEl.value : 'All types', l: lEl ? lEl.value : 'All locations' };
+  var resEl = $('#res');
+  if(resEl) resEl.innerHTML = res();
+});
+
+document.addEventListener('submit', function(e){
+  e.preventDefault();
+  var f = e.target;
+  var d = {};
+  var inputs = f.querySelectorAll('input, select, textarea');
+  for(var i = 0; i < inputs.length; i++){
+    if(inputs[i].name) d[inputs[i].name] = inputs[i].value;
+  }
+  var m = me();
+
+  if(f.dataset.f === 'reg'){
+    R.profiles[uid] = { name: d.name.trim(), phone: d.phone.trim(), role: d.role, loc: d.loc };
+    saveLocal(); toast('Profile saved'); go(d.role.indexOf('Buyer') !== -1 || d.role === 'Consumer' ? '#/browse' : '#/stock');
+  }
+  else if(f.dataset.f === 'add'){
+    R.stock[uid] = R.stock[uid] || { items:[] };
+    R.stock[uid].items.push({ id:nid(), type:d.type, grade:d.grade, cond:d.cond, qty:+d.qty, price:+d.price, loc:d.loc, note:(d.note||'').trim(), status:'active', ts:Date.now() });
+    saveLocal(); toast('Catch posted!'); go('#/stock');
+  }
+  else if(f.dataset.f === 'order'){
+    var p = data.products.find(function(x){ return x.id === f.dataset.id; });
+    if(!p || +d.qty > p.qty || +d.qty <= 0) return toast('Quantity unavailable');
+    openMoMo({ product:p, qty:+d.qty, mode:d.mode, date:d.date });
+  }
+});
+
+loadLocal();
+render();
+</script>
+</body>
+</html>
