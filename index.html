@@ -93,7 +93,7 @@ var GRADES = ['Grade A (>1.5kg)','Grade B (0.8-1.4kg)','Grade C (<0.8kg)','Proce
 var ROLES = ['Fisherman','Fish farmer','Fish vendor','Restaurant/Hotel Buyer','Consumer','Entebbe Boda Carrier'];
 var COND = ['Fresh today','Smoked','Dried'];
 
-// Strictly mapped only to your 4 local images
+// Filenames strictly pointing to your 4 image files
 var FS_IMG = {
   "Tilapia": "images.jpg",
   "Catfish": "images3.jpg",
@@ -239,9 +239,17 @@ function derive(){
   });
 }
 
+function trySubfolder(img) {
+  if (!img.dataset.triedSub) {
+    img.dataset.triedSub = "1";
+    var filename = FS_IMG[img.alt] || "images.jpg";
+    img.src = "images/" + filename;
+  }
+}
+
 function fishImg(t){
-  var imgFile = FS_IMG[t] || "images.jpg";
-  return '<img src="' + imgFile + '" alt="' + esc(t) + '">';
+  var filename = FS_IMG[t] || "images.jpg";
+  return '<img src="' + filename + '" alt="' + esc(t) + '" onerror="trySubfolder(this)">';
 }
 
 function activeProducts(){
