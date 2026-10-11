@@ -21,7 +21,7 @@ input,select,textarea{width:100%;box-sizing:border-box;min-height:44px;border:1p
 .card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
 .pc{flex-direction:row;align-items:center;gap:12px;color:inherit;text-decoration:none}
 .ph{width:76px;height:76px;border-radius:8px;background:var(--ph);color:var(--pt);display:flex;align-items:center;justify-content:center;font-size:11px;text-align:center;flex:none;overflow:hidden;position:relative}
-.ph img,.ph svg{width:100%;height:100%;object-fit:cover;border-radius:8px;display:block}
+.ph img{width:100%;height:100%;object-fit:cover;border-radius:8px;display:block}
 .big{width:100%;height:220px;font-size:14px;overflow:hidden}
 .row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:110px}.col{flex:1;min-width:0}
 .t{font-weight:700}.m{font-size:13px;color:var(--mu)}.pill{display:inline-block;font-size:11px;font-weight:700;border:1px solid var(--mu);border-radius:20px;padding:2px 8px;color:var(--tx)}
@@ -94,11 +94,12 @@ var GRADES = ['Grade A (>1.5kg)','Grade B (0.8-1.4kg)','Grade C (<0.8kg)','Proce
 var ROLES = ['Fisherman','Fish farmer','Fish vendor','Restaurant/Hotel Buyer','Consumer','Entebbe Boda Carrier'];
 var COND = ['Fresh today','Smoked','Dried'];
 
-var FS_SVG = {
-  "Tilapia": '<svg viewBox="0 0 100 100" style="background:#e8f0e8"><rect x="47" y="10" width="6" height="80" fill="#8B5A2B"/><g fill="#556B2F"><path d="M30 30 C 40 10, 60 10, 70 30 C 60 50, 40 50, 30 30 Z"/><path d="M25 50 C 35 30, 55 30, 65 50 C 55 70, 35 70, 25 50 Z"/><path d="M35 70 C 45 50, 65 50, 75 70 C 65 90, 45 90, 35 70 Z"/></g><circle cx="65" cy="25" r="2" fill="#fff"/><circle cx="60" cy="45" r="2" fill="#fff"/><circle cx="70" cy="65" r="2" fill="#fff"/></svg>',
-  "Catfish": '<svg viewBox="0 0 100 100" style="background:#fff"><path d="M 20 30 C 50 10, 80 20, 85 50 C 90 80, 50 80, 40 70 L 35 85 L 25 75 Z" fill="#2F2F3D"/><circle cx="30" cy="35" r="3" fill="#D32F2F"/><path d="M 15 40 Q 25 38 30 38 M 12 45 Q 22 42 28 40 M 15 50 Q 25 45 30 42" stroke="#D32F2F" stroke-width="2" fill="none"/></svg>',
-  "Nile perch": '<svg viewBox="0 0 100 100" style="background:#f0f4f8"><path d="M 15 50 L 40 20 L 85 30 L 70 65 L 25 75 Z" fill="#B0C4DE"/><path d="M 20 70 L 80 50 L 85 85 Z" fill="#E6C280"/><circle cx="25" cy="45" r="3" fill="#4B0082"/><path d="M 35 25 L 45 15 L 55 23 L 65 18 L 75 28" stroke="#8A9EA7" stroke-width="3" fill="none"/></svg>',
-  "Mukene": '<svg viewBox="0 0 100 100" style="background:#d2b48c"><g fill="#8b7355" opacity="0.8"><rect x="10" y="10" width="12" height="4" rx="2"/><rect x="25" y="12" width="15" height="5" rx="2"/><rect x="45" y="8" width="10" height="4" rx="2"/><rect x="60" y="15" width="14" height="4" rx="2"/><rect x="80" y="10" width="12" height="5" rx="2"/><rect x="15" y="30" width="14" height="4" rx="2"/><rect x="35" y="28" width="12" height="5" rx="2"/><rect x="52" y="32" width="15" height="4" rx="2"/><rect x="72" y="30" width="11" height="4" rx="2"/><rect x="8" y="50" width="13" height="5" rx="2"/><rect x="26" y="48" width="11" height="4" rx="2"/><rect x="42" y="52" width="16" height="5" rx="2"/><rect x="65" y="50" width="12" height="4" rx="2"/><rect x="82" y="52" width="10" height="4" rx="2"/><rect x="12" y="70" width="15" height="4" rx="2"/><rect x="32" y="72" width="12" height="5" rx="2"/><rect x="50" y="68" width="14" height="4" rx="2"/><rect x="70" y="72" width="15" height="5" rx="2"/><rect x="20" y="88" width="12" height="4" rx="2"/><rect x="40" y="85" width="15" height="5" rx="2"/><rect x="60" y="88" width="11" height="4" rx="2"/></g></svg>'
+// Strictly mapping your exact 4 image filenames
+var FS_IMG = {
+  "Tilapia": "images.jpg",
+  "Catfish": "images3.jpg",
+  "Nile perch": "images4.jpg",
+  "Mukene": "images5.jpg"
 };
 
 var currentLang = 'en';
@@ -239,8 +240,17 @@ function derive(){
   });
 }
 
+function trySubfolder(img) {
+  if (!img.dataset.triedSub) {
+    img.dataset.triedSub = "1";
+    var filename = FS_IMG[img.alt] || "images.jpg";
+    img.src = "images/" + filename;
+  }
+}
+
 function fishImg(t){
-  return FS_SVG[t] || FS_SVG["Tilapia"];
+  var imgFile = FS_IMG[t] || "images.jpg";
+  return '<img src="' + imgFile + '" alt="' + esc(t) + '" onerror="trySubfolder(this)">';
 }
 
 function activeProducts(){
@@ -280,7 +290,7 @@ function res(){
     var matchQ = !q || (p.type + ' ' + sellerName + ' ' + p.loc + ' ' + p.cond + ' ' + (p.grade||'')).toLowerCase().indexOf(q) !== -1;
     return matchType && matchLoc && matchQ;
   });
-  return r.length ? r.map(card).join('') : '<div class="empty">' + (currentLang==='lg'?'Tewali byennyanja biteekeddwawo.':'No matching fish found. Try clearing your search term.') + '</div>';
+  return r.length ? r.map(card).join('') : '<div class="empty">' + (currentLang==='lg'?'Tewali byennyanja biteekeddwawo.':'No matching fish found.') + '</div>';
 }
 
 function board(){
@@ -509,7 +519,7 @@ document.addEventListener('input', function(e){
 
 document.addEventListener('submit', function(e){
   var f = e.target;
-  if (f.id === 'flt') return; // Handled by inline submit
+  if (f.id === 'flt') return;
   e.preventDefault();
   var d = {};
   var inputs = f.querySelectorAll('input, select, textarea');
